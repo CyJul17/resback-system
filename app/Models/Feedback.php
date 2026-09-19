@@ -11,6 +11,8 @@ class Feedback extends Model
 {
     use HasFactory;
 
+    protected $table = 'feedbacks';
+
     /**
      * The attributes that are mass assignable.
      *

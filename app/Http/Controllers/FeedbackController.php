@@ -26,7 +26,7 @@ class FeedbackController extends Controller
     /**
      * Store a newly submitted feedback and trigger sentiment analysis.
      */
-    public function store(StoreFeedbackRequest $request): RedirectResponse
+    public function store(StoreFeedbackRequest $request): View
     {
         // Hash IP for rate limiting — never stored as plain text
         $ipHash = hash('sha256', $request->ip() . config('app.key'));
@@ -41,7 +41,7 @@ class FeedbackController extends Controller
         // Trigger sentiment analysis (runs synchronously; swap for a queued job later)
         $this->sentimentService->analyze($feedback);
 
-        return redirect()->route('feedback.thankyou');
+        return view('feedback.result', ['feedback' => $feedback->load('sentimentResult')]);
     }
 
     /**
@@ -49,6 +49,10 @@ class FeedbackController extends Controller
      */
     public function thankyou(): View
     {
-        return view('feedback.thankyou');
+        $feedback = null;
+        if (session()->has('last_feedback_id')) {
+            $feedback = Feedback::with('sentimentResult')->find(session('last_feedback_id'));
+        }
+        return view('feedback.thankyou', compact('feedback'));
     }
 }

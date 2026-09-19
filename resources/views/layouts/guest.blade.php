@@ -36,7 +36,7 @@
 
     {{-- ═══════ FOOTER ═══════ --}}
     <footer style="text-align:center;padding:1.25rem;font-size:.8rem;color:var(--gray-400);border-top:1px solid var(--gray-200);background:white;">
-        © {{ date('Y') }} ResBack — CCIS Feedback System &nbsp;·&nbsp; Powered by XLM-RoBERTa Sentiment Analysis
+        © {{ date('Y') }} ResBack — CCIS Feedback System &nbsp;·&nbsp; Powered by Gemma Sentiment Analysis
     </footer>
 
 </div>
