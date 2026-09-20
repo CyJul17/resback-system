@@ -19,6 +19,7 @@ class Feedback extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'user_id',
         'category_id',
         'content',
         'ip_hash',
@@ -41,6 +42,14 @@ class Feedback extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Get the account that submitted this feedback.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**

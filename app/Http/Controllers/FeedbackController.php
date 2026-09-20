@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Feedback;
 use App\Services\SentimentService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class FeedbackController extends Controller
@@ -14,7 +15,7 @@ class FeedbackController extends Controller
     public function __construct(protected SentimentService $sentimentService) {}
 
     /**
-     * Show the anonymous feedback submission form.
+     * Show the confidential feedback submission form.
      */
     public function create(): View
     {
@@ -37,6 +38,7 @@ class FeedbackController extends Controller
         $ipHash = hash('sha256', $request->ip() . config('app.key'));
 
         $feedback = Feedback::create([
+            'user_id'     => $request->user()->id,
             'category_id' => $request->category_id,
             'content'     => $request->content,
             'ip_hash'     => $ipHash,
@@ -47,6 +49,20 @@ class FeedbackController extends Controller
         $this->sentimentService->analyze($feedback);
 
         return view('feedback.result', ['feedback' => $feedback->load('sentimentResult')]);
+    }
+
+    /**
+     * Show only the signed-in user's feedback submissions.
+     */
+    public function history(Request $request): View
+    {
+        $feedbacks = $request->user()
+            ->feedbacks()
+            ->with(['category', 'sentimentResult'])
+            ->latest()
+            ->simplePaginate(10);
+
+        return view('feedback.history', compact('feedbacks'));
     }
 
     /**

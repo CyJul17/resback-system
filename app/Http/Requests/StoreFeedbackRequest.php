@@ -8,8 +8,7 @@ use Illuminate\Validation\Rule;
 class StoreFeedbackRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
-     * Feedback submission is public — all students can submit.
+     * Determine if the authenticated user is authorized to make this request.
      */
     public function authorize(): bool
     {

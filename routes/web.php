@@ -28,6 +28,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'active', 'feedback.submitter'])->group(function () {
     Route::get('/', [FeedbackController::class, 'create'])->name('feedback.create');
     Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+    Route::get('/feedback/history', [FeedbackController::class, 'history'])->name('feedback.history');
     Route::get('/feedback/thankyou', [FeedbackController::class, 'thankyou'])->name('feedback.thankyou');
 });
 

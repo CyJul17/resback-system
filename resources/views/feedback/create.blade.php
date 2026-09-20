@@ -6,7 +6,7 @@
 
     {{-- Header --}}
     <div class="feedback-card-header">
-        <div class="header-icon">💬</div>
+        <div class="feedback-step">Student feedback · CCIS</div>
         <h1>Share Your Feedback</h1>
         <p>Help us improve CCIS by sharing your campus experience. Every voice matters.</p>
     </div>
@@ -15,9 +15,9 @@
     <div class="feedback-card-body">
 
         {{-- Anonymous Badge --}}
-        <div>
+        <div class="privacy-row">
             <span class="anonymous-badge">
-                🔒 Your submission is completely anonymous
+                <span aria-hidden="true">✓</span> Your identity stays private from reviewers
             </span>
         </div>
 
@@ -81,14 +81,15 @@
             </div>
 
             {{-- Privacy Notice --}}
-            <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-md);padding:.875rem 1rem;margin-bottom:1.5rem;font-size:.8125rem;color:var(--gray-500);line-height:1.6;">
-                <strong style="color:var(--gray-700);">📋 Privacy Note:</strong>
-                Your feedback is submitted anonymously. No personal information is collected.
-                The content will be analyzed using AI sentiment analysis to help identify campus concerns.
+            <div class="privacy-notice">
+                <strong>Privacy Note:</strong>
+                Your account is linked privately so you can access your feedback history. Your identity is not
+                shown in the faculty dashboard or export. The content is analyzed using AI sentiment analysis
+                to help identify campus concerns.
             </div>
 
             <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn">
-                <span>🚀</span> Submit Feedback
+                Submit Feedback
             </button>
         </form>
 
@@ -127,7 +128,7 @@
     document.getElementById('feedbackForm').addEventListener('submit', function () {
         const btn = document.getElementById('submitBtn');
         btn.disabled = true;
-        btn.innerHTML = '<span>⏳</span> Submitting...';
+        btn.textContent = 'Submitting...';
     });
 </script>
 @endpush

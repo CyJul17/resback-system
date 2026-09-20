@@ -3,17 +3,17 @@
 
 @section('content')
 <div class="thankyou-card">
-    <div class="thankyou-icon">✅</div>
+    <div class="thankyou-icon">✓</div>
 
     <h1>Thank You!</h1>
     <p>
-        Your feedback has been received and submitted anonymously.<br>
+        Your feedback has been received and stored confidentially.<br>
         Our AI system will analyze it to help improve the CCIS campus experience.
     </p>
 
     <div style="display:flex;flex-direction:column;gap:.75rem;align-items:center;">
         <a href="{{ route('feedback.create') }}" class="btn btn-primary">
-            📝 Submit Another Feedback
+            Submit Another Feedback
         </a>
         <span style="font-size:.8rem;color:var(--gray-400);">Your feedback makes a difference!</span>
     </div>

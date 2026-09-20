@@ -6,34 +6,38 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'Submit Feedback') — ResBack</title>
-    <meta name="description" content="Submit anonymous campus feedback securely. Your voice matters.">
+    <meta name="description" content="Submit confidential campus feedback securely. Your voice matters.">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
-<body>
+<body class="guest-page">
 <div class="guest-layout">
-
-    {{-- ═══════ HEADER ═══════ --}}
     <header class="guest-header">
-        <a href="{{ route('feedback.create') }}" class="brand">
-            <div class="brand-icon">💬</div>
-            ResBack
+        <a href="{{ route('feedback.create') }}" class="institution-brand">
+            <span class="brand-seal" aria-hidden="true">CCIS</span>
+            <span>
+                <strong>ResBack</strong>
+                <small>Student Feedback Portal</small>
+            </span>
         </a>
-        <div style="display:flex;align-items:center;gap:.5rem;">
+        <nav class="guest-nav" aria-label="Account navigation">
             @auth
                 @if(in_array(auth()->user()->role, ['admin', 'faculty'], true))
                     <a href="{{ route('dashboard') }}" class="header-link">Dashboard</a>
                 @endif
-                <span class="header-link">{{ auth()->user()->name }}</span>
+                @unless(auth()->user()->isAdmin())
+                    <a href="{{ route('feedback.history') }}" class="header-link {{ request()->routeIs('feedback.history') ? 'header-link-active' : '' }}">My Feedback</a>
+                @endunless
+                <span class="guest-user">{{ auth()->user()->display_first_name }}</span>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="header-link" style="border:0;background:transparent;cursor:pointer;">Logout</button>
+                    <button type="submit" class="header-link header-button">Logout</button>
                 </form>
             @else
                 <a href="{{ route('login') }}" class="header-link">Sign In</a>
             @endauth
-        </div>
+        </nav>
     </header>
 
     {{-- ═══════ MAIN ═══════ --}}
@@ -41,9 +45,9 @@
         @yield('content')
     </main>
 
-    {{-- ═══════ FOOTER ═══════ --}}
-    <footer style="text-align:center;padding:1.25rem;font-size:.8rem;color:var(--gray-400);border-top:1px solid var(--gray-200);background:white;">
-        © {{ date('Y') }} ResBack — CCIS Feedback System &nbsp;·&nbsp; Powered by Gemma Sentiment Analysis
+    <footer class="guest-footer">
+        <span>© {{ date('Y') }} ResBack — CCIS Feedback System</span>
+        <span>Powered by Gemma Sentiment Analysis</span>
     </footer>
 
 </div>
