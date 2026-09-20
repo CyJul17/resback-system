@@ -27,6 +27,8 @@ class Category extends Model
         'OVAL',
     ];
 
+    public const AVAILABLE_FEEDBACK_CATEGORIES = ['CCIS'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -71,5 +73,10 @@ class Category extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    public function isAvailableForFeedback(): bool
+    {
+        return in_array($this->name, self::AVAILABLE_FEEDBACK_CATEGORIES, true);
     }
 }

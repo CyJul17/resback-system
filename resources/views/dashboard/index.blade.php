@@ -16,11 +16,15 @@
             <form action="{{ route('dashboard') }}" method="GET" style="display:flex;gap:.75rem;align-items:end;flex-wrap:wrap;">
                 <div style="flex:1;min-width:240px;">
                     <label for="category_id" class="form-label" style="color:var(--gray-300);">Filter dashboard by category</label>
-                    <select id="category_id" name="category_id" class="form-control" onchange="this.form.submit()">
-                        <option value="">All categories</option>
+                    <select id="category_id" name="category_id" class="form-control" onchange="handleDashboardCategorySelection(this)">
                         @foreach($filterCategories as $category)
-                            <option value="{{ $category->id }}" @selected($selectedCategory?->is($category))>
-                                {{ $category->name }}
+                            <option
+                                value="{{ $category->id }}"
+                                data-available="{{ $category->isAvailableForFeedback() ? 'true' : 'false' }}"
+                                aria-disabled="{{ $category->isAvailableForFeedback() ? 'false' : 'true' }}"
+                                @selected($selectedCategory?->is($category))
+                            >
+                                {{ $category->name }}{{ $category->isAvailableForFeedback() ? '' : ' — Coming soon' }}
                             </option>
                         @endforeach
                     </select>
@@ -35,8 +39,8 @@
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
-                @if($hasFilters)
-                    <a href="{{ route('dashboard') }}" class="btn btn-ghost btn-sm">Show Mixed View</a>
+                @if($selectedLanguage)
+                    <a href="{{ route('dashboard') }}" class="btn btn-ghost btn-sm">Clear Language Filter</a>
                 @endif
             </form>
             <div style="font-size:.8rem;color:var(--gray-400);margin-top:.75rem;">
@@ -214,6 +218,19 @@
 
 @push('scripts')
 <script>
+const availableDashboardCategoryId = @json($selectedCategory?->id);
+
+function handleDashboardCategorySelection(select) {
+    const selectedOption = select.options[select.selectedIndex];
+    if (selectedOption.dataset.available !== 'true') {
+        alert('Coming soon');
+        select.value = String(availableDashboardCategoryId);
+        return;
+    }
+
+    select.form.submit();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const chartTextColor = '#94a3b8';
     const chartGridColor = 'rgba(148, 163, 184, 0.12)';

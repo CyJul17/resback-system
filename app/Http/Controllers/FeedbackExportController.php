@@ -44,6 +44,7 @@ class FeedbackExportController extends Controller
         $row = 2;
         Feedback::query()
             ->with(['category', 'sentimentResult'])
+            ->whereHas('category', fn ($query) => $query->where('name', 'CCIS'))
             ->orderBy('id')
             ->lazyById(500)
             ->each(function (Feedback $feedback) use ($sheet, &$row): void {

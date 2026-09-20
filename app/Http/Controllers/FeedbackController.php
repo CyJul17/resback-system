@@ -23,8 +23,9 @@ class FeedbackController extends Controller
             ->get()
             ->sortBy(fn (Category $category) => $categoryOrder[$category->name] ?? PHP_INT_MAX)
             ->values();
+        $defaultCategory = $categories->first(fn (Category $category) => $category->isAvailableForFeedback());
 
-        return view('feedback.create', compact('categories'));
+        return view('feedback.create', compact('categories', 'defaultCategory'));
     }
 
     /**

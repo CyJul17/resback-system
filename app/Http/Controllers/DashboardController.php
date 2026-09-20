@@ -8,6 +8,7 @@ use App\Models\SentimentResult;
 use App\Services\LanguageCategoryService;
 use App\Services\ConcernRankingService;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -15,7 +16,7 @@ class DashboardController extends Controller
     /**
      * Show the admin/faculty dashboard with concern rankings and sentiment data.
      */
-    public function index(Request $request, ConcernRankingService $rankingService): View
+    public function index(Request $request, ConcernRankingService $rankingService): View|RedirectResponse
     {
         $categoryOrder = array_flip(Category::FEEDBACK_CATEGORIES);
         $filterCategories = Category::active()
@@ -23,10 +24,18 @@ class DashboardController extends Controller
             ->sortBy(fn (Category $category) => $categoryOrder[$category->name] ?? PHP_INT_MAX)
             ->values();
 
-        $selectedCategory = null;
+        $selectedCategory = $filterCategories->first(
+            fn (Category $category) => $category->isAvailableForFeedback()
+        );
         if ($request->filled('category_id')) {
-            $selectedCategory = $filterCategories->firstWhere('id', $request->integer('category_id'));
-            abort_unless($selectedCategory, 404, 'The selected category is unavailable.');
+            $requestedCategory = $filterCategories->firstWhere('id', $request->integer('category_id'));
+            abort_unless($requestedCategory, 404, 'The selected category is unavailable.');
+
+            if (! $requestedCategory->isAvailableForFeedback()) {
+                return redirect()->route('dashboard')->with('error', 'Coming soon. Dashboard data is currently available for CCIS only.');
+            }
+
+            $selectedCategory = $requestedCategory;
         }
 
         $filterLanguages = LanguageCategoryService::CATEGORY_LABELS;

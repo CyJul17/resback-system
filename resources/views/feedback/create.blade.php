@@ -44,11 +44,16 @@
                     name="category_id"
                     class="form-control {{ $errors->has('category_id') ? 'is-invalid' : '' }}"
                     required
+                    onchange="handleFeedbackCategorySelection(this)"
                 >
-                    <option value="" disabled @selected(! old('category_id'))>Select where your feedback should go</option>
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
-                            {{ $category->name }}
+                        <option
+                            value="{{ $category->id }}"
+                            data-available="{{ $category->isAvailableForFeedback() ? 'true' : 'false' }}"
+                            aria-disabled="{{ $category->isAvailableForFeedback() ? 'false' : 'true' }}"
+                            @selected($defaultCategory?->is($category))
+                        >
+                            {{ $category->name }}{{ $category->isAvailableForFeedback() ? '' : ' — Coming soon' }}
                         </option>
                     @endforeach
                 </select>
@@ -93,6 +98,16 @@
 
 @push('scripts')
 <script>
+    const availableFeedbackCategoryId = @json($defaultCategory?->id);
+
+    function handleFeedbackCategorySelection(select) {
+        const selectedOption = select.options[select.selectedIndex];
+        if (selectedOption.dataset.available !== 'true') {
+            alert('Coming soon');
+            select.value = String(availableFeedbackCategoryId);
+        }
+    }
+
     // Character counter
     function updateCounter(textarea) {
         const counter = document.getElementById('charCounter');

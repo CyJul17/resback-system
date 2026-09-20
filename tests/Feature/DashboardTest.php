@@ -39,7 +39,7 @@ class DashboardTest extends TestCase
         $this->actingAs($admin)->post(route('feedback.store'))->assertForbidden();
     }
 
-    public function test_default_dashboard_shows_only_ten_mixed_feedbacks(): void
+    public function test_dashboard_defaults_to_ccis_and_excludes_other_categories(): void
     {
         $faculty = User::factory()->create(['role' => 'faculty']);
         $ccis = Category::create(['name' => 'CCIS', 'slug' => 'ccis', 'is_active' => true]);
@@ -56,9 +56,26 @@ class DashboardTest extends TestCase
         $this->actingAs($faculty)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertSee('All categories and languages (mixed)')
-            ->assertViewHas('totalFeedbacks', 12)
-            ->assertViewHas('recentFeedbacks', fn ($feedbacks) => $feedbacks->count() === 10);
+            ->assertSee('CCIS')
+            ->assertSee('CAS — Coming soon')
+            ->assertViewHas('totalFeedbacks', 6)
+            ->assertViewHas('selectedCategory', fn ($category) => $category->is($ccis))
+            ->assertViewHas('recentFeedbacks', fn ($feedbacks) =>
+                $feedbacks->total() === 6
+                && collect($feedbacks->items())->every(fn ($feedback) => $feedback->category_id === $ccis->id)
+            );
+    }
+
+    public function test_unavailable_dashboard_category_redirects_with_coming_soon_message(): void
+    {
+        $faculty = User::factory()->create(['role' => 'faculty']);
+        Category::create(['name' => 'CCIS', 'slug' => 'ccis', 'is_active' => true]);
+        $cas = Category::create(['name' => 'CAS', 'slug' => 'cas', 'is_active' => true]);
+
+        $this->actingAs($faculty)
+            ->get(route('dashboard', ['category_id' => $cas->id]))
+            ->assertRedirect(route('dashboard'))
+            ->assertSessionHas('error', 'Coming soon. Dashboard data is currently available for CCIS only.');
     }
 
     public function test_category_selection_filters_every_dashboard_result(): void

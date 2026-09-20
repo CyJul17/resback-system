@@ -21,9 +21,29 @@ class FeedbackCategoryTest extends TestCase
 
         $response->assertOk()
             ->assertSee('Department or Campus Area')
-            ->assertSeeInOrder(Category::FEEDBACK_CATEGORIES);
+            ->assertSeeInOrder(Category::FEEDBACK_CATEGORIES)
+            ->assertSee('COE — Coming soon')
+            ->assertSee('Coming soon');
 
         $this->assertSame(count(Category::FEEDBACK_CATEGORIES), Category::active()->count());
+    }
+
+    public function test_only_ccis_can_be_submitted_while_other_categories_are_coming_soon(): void
+    {
+        $this->seed(CategorySeeder::class);
+        $student = User::factory()->create(['role' => 'student']);
+        $cas = Category::query()->where('name', 'CAS')->firstOrFail();
+
+        $this->actingAs($student)
+            ->post(route('feedback.store'), [
+                'category_id' => $cas->id,
+                'content' => 'This CAS submission should be blocked for now.',
+            ])
+            ->assertSessionHasErrors([
+                'category_id' => 'Coming soon. Feedback submissions are currently available for CCIS only.',
+            ]);
+
+        $this->assertDatabaseCount('feedbacks', 0);
     }
 
     public function test_feedback_submission_requires_an_active_category(): void

@@ -18,8 +18,8 @@ class FeedbackExportTest extends TestCase
     {
         $faculty = User::factory()->create(['role' => 'faculty']);
         $category = Category::create([
-            'name' => 'Facilities',
-            'slug' => 'facilities',
+            'name' => 'CCIS',
+            'slug' => 'ccis',
             'is_active' => true,
         ]);
 
@@ -52,7 +52,7 @@ class FeedbackExportTest extends TestCase
 
             $this->assertNotNull($sheet);
             $this->assertSame('Submission Date', $sheet->getCell('B1')->getValue());
-            $this->assertSame('Facilities', $sheet->getCell('C2')->getValue());
+            $this->assertSame('CCIS', $sheet->getCell('C2')->getValue());
             $this->assertSame($feedback->content, $sheet->getCell('D2')->getValue());
             $this->assertSame(DataType::TYPE_STRING, $sheet->getCell('D2')->getDataType());
             $this->assertSame('Negative', $sheet->getCell('E2')->getValue());

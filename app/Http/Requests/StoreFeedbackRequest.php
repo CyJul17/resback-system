@@ -26,7 +26,9 @@ class StoreFeedbackRequest extends FormRequest
         return [
             'category_id' => [
                 'required',
-                Rule::exists('categories', 'id')->where('is_active', true),
+                Rule::exists('categories', 'id')->where(
+                    fn ($query) => $query->where('is_active', true)->where('name', 'CCIS')
+                ),
             ],
             'content'     => ['required', 'string', 'min:10', 'max:2000'],
         ];
@@ -44,7 +46,7 @@ class StoreFeedbackRequest extends FormRequest
             'content.min'      => 'Your feedback must be at least 10 characters long.',
             'content.max'      => 'Your feedback must not exceed 2,000 characters.',
             'category_id.required' => 'Please select the department or campus area for your feedback.',
-            'category_id.exists' => 'The selected category is invalid.',
+            'category_id.exists' => 'Coming soon. Feedback submissions are currently available for CCIS only.',
         ];
     }
 }
