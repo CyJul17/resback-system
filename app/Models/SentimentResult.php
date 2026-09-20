@@ -20,6 +20,10 @@ class SentimentResult extends Model
         'sentiment',
         'confidence',
         'keywords',
+        'concern_topics',
+        'detected_languages',
+        'language_category',
+        'language_confidence',
         'raw_response',
     ];
 
@@ -30,8 +34,11 @@ class SentimentResult extends Model
      */
     protected $casts = [
         'keywords'     => 'array',
+        'concern_topics' => 'array',
+        'detected_languages' => 'array',
         'raw_response' => 'array',
         'confidence'   => 'float',
+        'language_confidence' => 'float',
     ];
 
     /**

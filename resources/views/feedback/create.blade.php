@@ -37,31 +37,25 @@
             @csrf
 
             {{-- Category Selection --}}
-            @if($categories->isNotEmpty())
             <div class="form-group">
-                <label class="form-label">
-                    Category <span class="optional">(optional)</span>
-                </label>
-                <div class="category-grid">
+                <label for="category_id" class="form-label">Department or Campus Area</label>
+                <select
+                    id="category_id"
+                    name="category_id"
+                    class="form-control {{ $errors->has('category_id') ? 'is-invalid' : '' }}"
+                    required
+                >
+                    <option value="" disabled @selected(! old('category_id'))>Select where your feedback should go</option>
                     @foreach($categories as $category)
-                        <div>
-                            <input
-                                type="radio"
-                                name="category_id"
-                                id="cat_{{ $category->id }}"
-                                value="{{ $category->id }}"
-                                class="category-option"
-                                {{ old('category_id') == $category->id ? 'checked' : '' }}
-                            >
-                            <label for="cat_{{ $category->id }}" class="category-label">
-                                <span class="cat-icon">{{ $category->icon ?? '📌' }}</span>
-                                {{ $category->name }}
-                            </label>
-                        </div>
+                        <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
+                            {{ $category->name }}
+                        </option>
                     @endforeach
-                </div>
+                </select>
+                @error('category_id')
+                    <div class="form-error">{{ $message }}</div>
+                @enderror
             </div>
-            @endif
 
             {{-- Feedback Text --}}
             <div class="form-group">

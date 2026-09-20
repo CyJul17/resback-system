@@ -22,6 +22,11 @@ class ConcernRanking extends Model
         'positive_count',
         'neutral_count',
         'negative_count',
+        'critical_score',
+        'negative_ratio',
+        'average_negative_confidence',
+        'recency_score',
+        'latest_feedback_at',
         'ranked_at',
     ];
 
@@ -32,6 +37,11 @@ class ConcernRanking extends Model
      */
     protected $casts = [
         'ranked_at' => 'datetime',
+        'latest_feedback_at' => 'datetime',
+        'critical_score' => 'float',
+        'negative_ratio' => 'float',
+        'average_negative_confidence' => 'float',
+        'recency_score' => 'float',
     ];
 
     /**

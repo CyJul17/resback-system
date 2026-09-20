@@ -18,7 +18,11 @@ class FeedbackController extends Controller
      */
     public function create(): View
     {
-        $categories = Category::active()->orderBy('name')->get();
+        $categoryOrder = array_flip(Category::FEEDBACK_CATEGORIES);
+        $categories = Category::active()
+            ->get()
+            ->sortBy(fn (Category $category) => $categoryOrder[$category->name] ?? PHP_INT_MAX)
+            ->values();
 
         return view('feedback.create', compact('categories'));
     }

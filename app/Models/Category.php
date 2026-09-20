@@ -10,6 +10,23 @@ class Category extends Model
 {
     use HasFactory;
 
+    public const FEEDBACK_CATEGORIES = [
+        'CCIS',
+        'COE',
+        'CAS',
+        'CBEA',
+        'CHS',
+        'CTE',
+        'CIT',
+        'CASAT',
+        'CAFSD',
+        'LIBRARY',
+        'ADMIN',
+        'TEATRO',
+        'COVER COURT',
+        'OVAL',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
