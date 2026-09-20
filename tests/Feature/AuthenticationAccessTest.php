@@ -21,7 +21,9 @@ class AuthenticationAccessTest extends TestCase
     public function test_public_registration_creates_only_a_student_account(): void
     {
         $response = $this->post(route('register'), [
-            'name' => 'Student User',
+            'first_name' => 'Student',
+            'middle_name' => 'Sample',
+            'last_name' => 'User',
             'email' => 'student@example.test',
             'role' => 'admin',
             'password' => 'Password123!',
@@ -31,8 +33,58 @@ class AuthenticationAccessTest extends TestCase
         $response->assertRedirect(route('feedback.create'));
         $this->assertAuthenticated();
         $this->assertDatabaseHas('users', [
+            'name' => 'Student Sample User',
+            'first_name' => 'Student',
+            'middle_name' => 'Sample',
+            'last_name' => 'User',
             'email' => 'student@example.test',
             'role' => 'student',
+        ]);
+    }
+
+    public function test_registration_rejects_numbers_in_name_fields(): void
+    {
+        $this->post(route('register'), [
+            'first_name' => 'Juan2',
+            'middle_name' => 'Santos3',
+            'last_name' => 'Cruz4',
+            'email' => 'numbered-name@example.test',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+        ])->assertSessionHasErrors(['first_name', 'middle_name', 'last_name']);
+
+        $this->assertDatabaseMissing('users', ['email' => 'numbered-name@example.test']);
+    }
+
+    public function test_registration_rejects_symbols_in_name_fields(): void
+    {
+        $this->post(route('register'), [
+            'first_name' => 'Juan-Paul',
+            'middle_name' => 'Santos.',
+            'last_name' => "Dela'Cruz",
+            'email' => 'symbol-name@example.test',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+        ])->assertSessionHasErrors(['first_name', 'middle_name', 'last_name']);
+
+        $this->assertDatabaseMissing('users', ['email' => 'symbol-name@example.test']);
+    }
+
+    public function test_compound_names_with_single_spaces_are_allowed(): void
+    {
+        $this->post(route('register'), [
+            'first_name' => 'Juan',
+            'middle_name' => 'Luan',
+            'last_name' => 'Dela Cruz',
+            'email' => 'compound-name@example.test',
+            'password' => 'Password123!',
+            'password_confirmation' => 'Password123!',
+        ])->assertRedirect(route('feedback.create'));
+
+        $this->assertDatabaseHas('users', [
+            'name' => 'Juan Luan Dela Cruz',
+            'first_name' => 'Juan',
+            'last_name' => 'Dela Cruz',
         ]);
     }
 
