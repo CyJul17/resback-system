@@ -15,7 +15,7 @@ use Illuminate\View\View;
 class RegisterController extends Controller
 {
     /**
-     * Show the registration form for admin/faculty accounts.
+     * Show the student registration form.
      */
     public function showRegistrationForm(): View
     {
@@ -30,21 +30,21 @@ class RegisterController extends Controller
         $validated = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'role'     => ['required', 'in:admin,faculty'],
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
         $user = User::create([
             'name'     => $validated['name'],
             'email'    => $validated['email'],
-            'role'     => $validated['role'],
+            'role'     => 'student',
             'password' => Hash::make($validated['password']),
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
+        $request->session()->regenerate();
 
-        return redirect()->route('dashboard');
+        return redirect()->route('feedback.create');
     }
 }

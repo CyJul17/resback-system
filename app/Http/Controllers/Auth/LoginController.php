@@ -11,7 +11,7 @@ use Illuminate\View\View;
 class LoginController extends Controller
 {
     /**
-     * Show the admin/faculty login form.
+     * Show the login form for all account types.
      */
     public function showLoginForm(): View
     {
@@ -28,10 +28,16 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        $credentials['is_active'] = true;
+
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('dashboard'));
+            $destination = in_array($request->user()->role, ['admin', 'faculty'], true)
+                ? route('dashboard')
+                : route('feedback.create');
+
+            return redirect()->intended($destination);
         }
 
         return back()->withErrors([

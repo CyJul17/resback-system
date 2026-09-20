@@ -22,9 +22,16 @@
         </a>
         <div style="display:flex;align-items:center;gap:.5rem;">
             @auth
-                <a href="{{ route('dashboard') }}" class="header-link">Dashboard →</a>
+                @if(in_array(auth()->user()->role, ['admin', 'faculty'], true))
+                    <a href="{{ route('dashboard') }}" class="header-link">Dashboard</a>
+                @endif
+                <span class="header-link">{{ auth()->user()->name }}</span>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="header-link" style="border:0;background:transparent;cursor:pointer;">Logout</button>
+                </form>
             @else
-                <a href="{{ route('login') }}" class="header-link">Admin Login</a>
+                <a href="{{ route('login') }}" class="header-link">Sign In</a>
             @endauth
         </div>
     </header>

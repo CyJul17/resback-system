@@ -1,5 +1,5 @@
 @extends('layouts.auth')
-@section('title', 'Admin Login')
+@section('title', 'Sign In')
 
 @section('content')
 <div class="auth-layout">
@@ -10,12 +10,16 @@
             <div class="logo-icon">💬</div>
             <div>
                 <div class="logo-text">ResBack</div>
-                <div class="logo-sub">Administration Portal</div>
+                <div class="logo-sub">CCIS Feedback System</div>
             </div>
         </div>
 
         <h2 class="auth-title">Welcome back</h2>
-        <p class="auth-subtitle">Sign in to access the feedback dashboard.</p>
+        <p class="auth-subtitle">Sign in to submit feedback or access the faculty dashboard.</p>
+
+        @if(session('error'))
+            <div class="alert alert-error">{{ session('error') }}</div>
+        @endif
 
         {{-- Errors --}}
         @if($errors->any())
@@ -35,7 +39,7 @@
                     name="email"
                     value="{{ old('email') }}"
                     class="form-control form-control-dark {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                    placeholder="admin@example.com"
+                    placeholder="you@example.com"
                     required
                     autofocus
                     autocomplete="email"
@@ -61,12 +65,9 @@
                 @enderror
             </div>
 
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
-                <label style="display:flex;align-items:center;gap:.5rem;font-size:.875rem;color:var(--gray-300);cursor:pointer;">
-                    <input type="checkbox" name="remember" style="accent-color:var(--primary);width:15px;height:15px;">
-                    Remember me
-                </label>
-            </div>
+            <p style="font-size:.8rem;color:var(--gray-400);margin-bottom:1.5rem;">
+                You will stay signed in for up to one hour.
+            </p>
 
             <button type="submit" class="btn btn-primary btn-block btn-lg">
                 🔐 Sign In
@@ -76,15 +77,6 @@
         <div class="auth-footer-link">
             Don't have an account?
             <a href="{{ route('register') }}">Create one</a>
-        </div>
-
-        <div class="auth-divider"></div>
-
-        <div style="text-align:center;">
-            <a href="{{ route('feedback.create') }}"
-               style="font-size:.8rem;color:var(--gray-500);">
-                ← Back to Feedback Form
-            </a>
         </div>
 
     </div>

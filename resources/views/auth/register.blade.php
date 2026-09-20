@@ -10,12 +10,12 @@
             <div class="logo-icon">💬</div>
             <div>
                 <div class="logo-text">ResBack</div>
-                <div class="logo-sub">Administration Portal</div>
+                <div class="logo-sub">CCIS Feedback System</div>
             </div>
         </div>
 
         <h2 class="auth-title">Create an account</h2>
-        <p class="auth-subtitle">Register an admin or faculty account to access the dashboard.</p>
+        <p class="auth-subtitle">Create a student account to submit and track your feedback session.</p>
 
         {{-- Errors --}}
         @if($errors->any())
@@ -61,22 +61,6 @@
                     autocomplete="email"
                 >
                 @error('email') <div class="form-error">{{ $message }}</div> @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="role" class="form-label form-label-dark">Role</label>
-                <select
-                    id="role"
-                    name="role"
-                    class="form-control form-control-dark {{ $errors->has('role') ? 'is-invalid' : '' }}"
-                    style="background-color:rgba(255,255,255,.06);"
-                    required
-                >
-                    <option value="" disabled {{ old('role') ? '' : 'selected' }}>Select your role</option>
-                    <option value="admin"   {{ old('role') === 'admin'   ? 'selected' : '' }}>Administrator</option>
-                    <option value="faculty" {{ old('role') === 'faculty' ? 'selected' : '' }}>Faculty Member</option>
-                </select>
-                @error('role') <div class="form-error">{{ $message }}</div> @enderror
             </div>
 
             <div class="form-group">

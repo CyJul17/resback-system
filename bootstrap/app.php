@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'admin.only' => \App\Http\Middleware\AdminOnlyMiddleware::class,
+            'active' => \App\Http\Middleware\ActiveAccountMiddleware::class,
+            'feedback.submitter' => \App\Http\Middleware\FeedbackSubmitterMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

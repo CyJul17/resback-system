@@ -33,12 +33,22 @@
                 Dashboard
             </a>
 
-            <div class="nav-section-label" style="margin-top:.75rem;">Quick Actions</div>
+            @if(auth()->user()->isAdmin())
+                <a href="{{ route('accounts.index') }}"
+                   class="nav-link {{ request()->routeIs('accounts.*') ? 'active' : '' }}">
+                    <span class="nav-icon">👥</span>
+                    Manage Accounts
+                </a>
+            @endif
 
-            <a href="{{ route('feedback.create') }}" target="_blank" class="nav-link">
-                <span class="nav-icon">📝</span>
-                View Feedback Form
-            </a>
+            @if(auth()->user()->isFaculty())
+                <div class="nav-section-label" style="margin-top:.75rem;">Quick Actions</div>
+
+                <a href="{{ route('feedback.create') }}" target="_blank" class="nav-link">
+                    <span class="nav-icon">📝</span>
+                    View Feedback Form
+                </a>
+            @endif
         </nav>
 
         <div class="sidebar-footer">

@@ -14,6 +14,16 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * Default values for newly created accounts.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'role' => 'student',
+        'is_active' => true,
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
@@ -23,6 +33,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'is_active',
     ];
 
     /**
@@ -45,6 +56,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
+            'is_active'         => 'boolean',
         ];
     }
 
@@ -62,5 +74,13 @@ class User extends Authenticatable
     public function isFaculty(): bool
     {
         return $this->role === 'faculty';
+    }
+
+    /**
+     * Check if user is a student.
+     */
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
     }
 }
