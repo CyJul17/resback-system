@@ -555,6 +555,75 @@ table.data-table {
 .data-table tbody tr:hover td { background: rgba(255,255,255,.03); }
 .data-table tbody tr:last-child td { border-bottom: none; }
 
+.feedback-message-cell {
+    min-width: 280px;
+    max-width: 520px;
+}
+
+.feedback-details summary {
+    cursor: pointer;
+    list-style: none;
+}
+
+.feedback-details summary::-webkit-details-marker { display: none; }
+
+.feedback-preview,
+.feedback-full-text {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.55;
+}
+
+.analytics-grid { margin-bottom: 1.5rem; }
+
+.chart-panel {
+    position: relative;
+    min-height: 320px;
+}
+
+.chart-panel-doughnut { max-height: 380px; }
+.chart-caption { font-size: .75rem; color: var(--gray-400); }
+.concern-chart-panel { position: relative; min-height: 260px; }
+
+.critical-score {
+    display: inline-flex;
+    min-width: 48px;
+    justify-content: center;
+    padding: .3rem .6rem;
+    border-radius: var(--radius-full);
+    font-weight: 700;
+    font-size: .78rem;
+}
+
+.critical-score-high { color: #fecaca; background: rgba(239,68,68,.2); }
+.critical-score-medium { color: #fde68a; background: rgba(245,158,11,.2); }
+.critical-score-low { color: #c7d2fe; background: rgba(99,102,241,.2); }
+
+.concern-evidence { margin-top: .45rem; min-width: 150px; }
+.concern-evidence summary { cursor: pointer; color: var(--primary-light); font-size: .78rem; font-weight: 600; }
+.concern-evidence-list { margin-top: .6rem; display: grid; gap: .6rem; min-width: 280px; }
+.concern-evidence-list div { white-space: normal; overflow-wrap: anywhere; line-height: 1.45; color: var(--gray-300); }
+.concern-evidence-list span { color: var(--gray-500); margin-right: .4rem; font-size: .72rem; }
+
+.feedback-expand-label {
+    display: block;
+    width: fit-content;
+    margin-top: .4rem;
+    color: var(--primary-light);
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.feedback-details[open] .feedback-preview { display: none; }
+.feedback-details[open] .feedback-expand-label::before { content: 'Hide full feedback'; }
+.feedback-details[open] .feedback-expand-label { font-size: 0; }
+.feedback-details[open] .feedback-expand-label::before { font-size: .75rem; }
+
+.feedback-full-text {
+    margin-top: .6rem;
+    color: var(--gray-200);
+}
+
 /* ============================================================
    ALERTS / VALIDATION ERRORS
    ============================================================ */
