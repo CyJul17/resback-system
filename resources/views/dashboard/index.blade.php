@@ -15,7 +15,7 @@
         <div class="card-body">
             <form action="{{ route('dashboard') }}" method="GET" style="display:flex;gap:.75rem;align-items:end;flex-wrap:wrap;">
                 <div style="flex:1;min-width:240px;">
-                    <label for="category_id" class="form-label" style="color:var(--gray-300);">Filter dashboard by category</label>
+                    <label for="category_id" class="form-label">Filter dashboard by category</label>
                     <select id="category_id" name="category_id" class="form-control" onchange="handleDashboardCategorySelection(this)">
                         @foreach($filterCategories as $category)
                             <option
@@ -30,7 +30,7 @@
                     </select>
                 </div>
                 <div style="flex:1;min-width:240px;">
-                    <label for="language_category" class="form-label" style="color:var(--gray-300);">Filter dashboard by language</label>
+                    <label for="language_category" class="form-label">Filter dashboard by language</label>
                     <select id="language_category" name="language_category" class="form-control" onchange="this.form.submit()">
                         <option value="">All languages</option>
                         @foreach($filterLanguages as $language)
@@ -44,7 +44,7 @@
                 @endif
             </form>
             <div style="font-size:.8rem;color:var(--gray-400);margin-top:.75rem;">
-                Currently showing: <strong style="color:var(--white);">{{ $hasFilters ? $filterLabel : 'All categories and languages (mixed)' }}</strong>
+                Currently showing: <strong style="color:var(--gray-900);">{{ $hasFilters ? $filterLabel : 'All categories and languages (mixed)' }}</strong>
             </div>
         </div>
     </section>
@@ -115,8 +115,8 @@
                     <tbody>
                     @foreach($concernRankings as $ranking)
                         <tr>
-                            <td><strong style="color:var(--white);">#{{ $loop->iteration }}</strong></td>
-                            <td><strong style="color:var(--white);">{{ $ranking['topic'] }}</strong></td>
+                            <td><strong style="color:var(--gray-900);">#{{ $loop->iteration }}</strong></td>
+                            <td><strong style="color:var(--gray-900);">{{ $ranking['topic'] }}</strong></td>
                             <td>
                                 <span class="critical-score critical-score-{{ $ranking['critical_score'] >= 75 ? 'high' : ($ranking['critical_score'] >= 45 ? 'medium' : 'low') }}">
                                     {{ number_format($ranking['critical_score'], 1) }}
@@ -158,9 +158,9 @@
             <div class="card-header"><h2>Language classification</h2></div>
             <div class="card-body">
                 @forelse($languageData as $language => $count)
-                    <div style="display:flex;justify-content:space-between;gap:1rem;padding:.65rem 0;border-bottom:1px solid rgba(255,255,255,.06);">
-                        <span style="color:var(--gray-300);">{{ $language }}</span>
-                        <strong style="color:var(--white);">{{ number_format($count) }}</strong>
+                    <div style="display:flex;justify-content:space-between;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--gray-200);">
+                        <span style="color:var(--gray-700);">{{ $language }}</span>
+                        <strong style="color:var(--gray-900);">{{ number_format($count) }}</strong>
                     </div>
                 @empty
                     <div class="empty-state"><p>No language classifications yet.</p></div>
@@ -232,8 +232,8 @@ function handleDashboardCategorySelection(select) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const chartTextColor = '#94a3b8';
-    const chartGridColor = 'rgba(148, 163, 184, 0.12)';
+    const chartTextColor = '#607082';
+    const chartGridColor = 'rgba(96, 112, 130, 0.13)';
     const sentimentChartData = @json($sentimentChartData);
     const sentimentTrendData = @json($sentimentTrendData);
     const concernChartData = @json($concernChartData);
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     label: 'Critical score',
                     data: concernChartData.values,
-                    backgroundColor: concernChartData.values.map(score => score >= 75 ? '#ef4444' : (score >= 45 ? '#f59e0b' : '#6366f1')),
+                    backgroundColor: concernChartData.values.map(score => score >= 75 ? '#dc4c4c' : (score >= 45 ? '#d99b18' : '#2e6da4')),
                     borderRadius: 6,
                 }],
             },

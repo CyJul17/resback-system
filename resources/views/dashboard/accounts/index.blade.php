@@ -9,11 +9,11 @@
         <div class="card-header">
             <div>
                 <h2>User accounts</h2>
-                <p style="font-size:.8rem;color:var(--gray-400);margin-top:.25rem;">
+                <p style="font-size:.8rem;color:var(--gray-500);margin-top:.25rem;">
                     New registrations start as students. Only administrators can change roles or account status.
                 </p>
             </div>
-            <span style="font-size:.8rem;color:var(--gray-400);">{{ number_format($users->total()) }} accounts</span>
+            <span style="font-size:.8rem;color:var(--gray-500);">{{ number_format($users->total()) }} accounts</span>
         </div>
 
         <div class="table-wrapper">
@@ -25,7 +25,7 @@
                 @foreach($users as $user)
                     <tr>
                         <td>
-                            <strong style="color:var(--white);">{{ $user->name }}</strong>
+                            <strong style="color:var(--gray-900);">{{ $user->name }}</strong>
                             @if(auth()->user()->is($user))
                                 <span class="badge badge-neutral" style="margin-left:.35rem;">You</span>
                             @endif

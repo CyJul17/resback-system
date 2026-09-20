@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="thankyou-card">
-    <div class="thankyou-icon">✅</div>
+    <div class="thankyou-icon">✓</div>
     <h1>Feedback Submitted</h1>
     <p>Thank you. Your feedback has been received.</p>
 
@@ -13,7 +13,7 @@
             $confidence = number_format($feedback->sentimentResult->confidence * 100, 0);
         @endphp
 
-        <div style="margin:1.75rem 0;padding:1.5rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-lg);">
+        <div class="result-summary">
             <div style="font-size:2rem;font-weight:800;color:var(--gray-900);text-transform:capitalize;">
                 {{ $confidence }}% {{ ucfirst($sentiment) }}
             </div>

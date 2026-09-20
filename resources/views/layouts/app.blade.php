@@ -11,17 +11,17 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
-<body>
+<body class="dashboard-page">
 <div class="app-layout">
-
-    {{-- ═══════ SIDEBAR ═══════ --}}
-    <aside class="sidebar">
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+    <aside class="sidebar" id="dashboardSidebar">
         <div class="sidebar-brand">
-            <div class="brand-icon">💬</div>
+            <div class="brand-seal brand-seal-small">CCIS</div>
             <div>
                 <div class="brand-text">ResBack</div>
-                <div class="brand-sub">Feedback System</div>
+                <div class="brand-sub">Academic Feedback System</div>
             </div>
+            <button class="sidebar-close" id="sidebarClose" type="button" aria-label="Close navigation">×</button>
         </div>
 
         <nav class="sidebar-nav">
@@ -29,14 +29,14 @@
 
             <a href="{{ route('dashboard') }}"
                class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                <span class="nav-icon">📊</span>
+                <span class="nav-icon" aria-hidden="true">▦</span>
                 Dashboard
             </a>
 
             @if(auth()->user()->isAdmin())
                 <a href="{{ route('accounts.index') }}"
                    class="nav-link {{ request()->routeIs('accounts.*') ? 'active' : '' }}">
-                    <span class="nav-icon">👥</span>
+                    <span class="nav-icon" aria-hidden="true">◎</span>
                     Manage Accounts
                 </a>
             @endif
@@ -45,7 +45,7 @@
                 <div class="nav-section-label" style="margin-top:.75rem;">Quick Actions</div>
 
                 <a href="{{ route('feedback.create') }}" target="_blank" class="nav-link">
-                    <span class="nav-icon">📝</span>
+                    <span class="nav-icon" aria-hidden="true">□</span>
                     View Feedback Form
                 </a>
             @endif
@@ -53,17 +53,15 @@
 
         <div class="sidebar-footer">
             <div class="user-card">
-                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+                <div class="user-avatar">{{ strtoupper(substr(auth()->user()->display_first_name, 0, 1)) }}</div>
                 <div class="user-info" style="flex:1; min-width:0;">
-                    <div class="user-name">{{ auth()->user()->name }}</div>
+                    <div class="user-name">{{ auth()->user()->display_first_name }}</div>
                     <div class="user-role">{{ auth()->user()->role }}</div>
                 </div>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" title="Logout"
-                        style="background:none;border:none;cursor:pointer;color:var(--gray-500);font-size:1.1rem;padding:.25rem;line-height:1;transition:color .15s;"
-                        onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--gray-500)'">
-                        🚪
+                    <button type="submit" title="Logout" class="sidebar-logout" aria-label="Logout">
+                        ↗
                     </button>
                 </form>
             </div>
@@ -73,11 +71,14 @@
     {{-- ═══════ MAIN CONTENT ═══════ --}}
     <div class="app-content">
         <header class="app-topbar">
-            <div>
+            <button class="menu-toggle" id="menuToggle" type="button" aria-controls="dashboardSidebar" aria-expanded="false" aria-label="Open navigation">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="topbar-heading">
                 <h1>@yield('page-title', 'Dashboard')</h1>
                 <div class="topbar-sub">@yield('page-subtitle', 'ResBack Feedback System')</div>
             </div>
-            <div style="display:flex;align-items:center;gap:.75rem;">
+            <div class="topbar-actions">
                 @yield('topbar-actions')
             </div>
         </header>
@@ -97,5 +98,28 @@
 </div>
 
 @stack('scripts')
+<script>
+    (() => {
+        const layout = document.querySelector('.app-layout');
+        const toggle = document.getElementById('menuToggle');
+        const close = document.getElementById('sidebarClose');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        if (!layout || !toggle) return;
+
+        const setMenu = (open) => {
+            layout.classList.toggle('sidebar-open', open);
+            toggle.setAttribute('aria-expanded', String(open));
+            document.body.classList.toggle('menu-open', open);
+        };
+
+        toggle.addEventListener('click', () => setMenu(!layout.classList.contains('sidebar-open')));
+        close?.addEventListener('click', () => setMenu(false));
+        overlay?.addEventListener('click', () => setMenu(false));
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') setMenu(false);
+        });
+    })();
+</script>
 </body>
 </html>
